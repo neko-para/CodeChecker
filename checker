@@ -1,0 +1,36 @@
+#!/bin/bash
+
+function remove_cxx {
+	local symbol;
+	while read symbol; do
+		if [ "$symbol" == "`c++filt $symbol`" ]; then
+			echo $symbol;
+		fi
+	done
+}
+
+SRC="$1"; # must be xxx.cpp
+OUT="${SRC::-4}";
+ASM="$OUT.s";
+
+echo -e "src:$SRC\nasm:$ASM\nout:$OUT";
+
+if ! g++ -S -o "$ASM" "$SRC"; then
+	echo >&2 "This source has compiling error.";
+	exit 1;
+fi
+
+if cat $ASM | grep -E '^#APP$' > /dev/null; then
+	echo >&2 "This source uses asm.";
+	exit 2;
+fi
+
+if ! cat $ASM | perl -ne 's/^\tcall\t(.*?)\@PLT$/$1/ && print' | remove_cxx | sort | uniq | ./checker-symbol > symbol-unknown; then
+	echo >&2 "This source uses invalid external function.";
+	exit 3;
+fi
+
+if ! g++ -o "$OUT" "$ASM"; then
+	echo >&2 "This source has linking error.";
+	exit 1;
+fi
