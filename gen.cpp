@@ -32,6 +32,67 @@ void check_errno() {
 	int x = errno;
 }
 
+void check_setjmp() {
+	jmp_buf buf;
+	setjmp(buf);
+	longjmp(buf, 0);
+}
+
+void check_stdio() {
+	// remove
+	// rename
+	// tmpfile
+	// tmpnam
+	va_list l;
+	char s[2];
+	fclose(0);
+	fflush(0);
+	fopen("", "");
+	freopen("", "", 0);
+	setbuf(0, 0);
+	setvbuf(0, 0, 0, 0);
+	fprintf(stdout, " ");
+	fscanf(0, " ");
+	printf(" ");
+	scanf(" ");
+	sprintf(s, " ");
+	sscanf(0, " ");
+	vfprintf(stdout, " ", l);
+	vprintf(" ", l);
+	vsprintf(s, " ", l);
+	fgetc(0);
+	fgets(0, 0, 0);
+	fputc(0, stdout);
+	fputs("", stdout);
+	getc(0);
+	getchar();
+#ifdef gets
+	gets(0);
+#endif
+	putc(0, stdout);
+	putchar(0);
+	puts("");
+	ungetc(0, 0);
+	fread(0, 0, 0, 0);
+	fwrite(s, 0, 0, stdout);
+	fgetpos(0, 0);
+	fseek(0, 0, 0);
+	fsetpos(0, 0);
+	ftell(0);
+	rewind(0);
+	clearerr(0);
+	feof(0);
+	ferror(0);
+	perror(0);
+#ifdef __CXX11__
+	snprintf(s, 2, " ");
+	vfscanf(0, " ", l);
+	vscanf(" ", l);
+	vsnprintf(s, 2, " ", l);
+	vsscanf(0, " ", l);
+#endif
+}
+
 #ifdef __CXX11__
 void check_fenv() {
 	int x;
@@ -65,10 +126,21 @@ int main() {
 	check_assert();
 	check_ctype();
 	check_errno();
-	// ignore locale
+	// float
+	// iso646
+	// limits
+	// locale
+	// math: all builtin
+	// signal
+	// stdarg: all buitlin
+	// stddef
+	check_setjmp();
+	check_stdio();
 
 #ifdef __CXX11__
 	check_fenv();
 	check_inttypes();
+	// stdbool
+	// stdint
 #endif
 }
