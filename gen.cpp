@@ -47,13 +47,28 @@ void check_fenv() {
 	x = feupdateenv(0);
 	x = feupdateenv(0);
 }
+
+void check_inttypes() {
+	intmax_t x;
+	uintmax_t y;
+	imaxdiv_t t;
+	x = imaxabs(0);
+	t = imaxdiv(0, 0);
+	x = strtoimax(0, 0, 0);
+	y = strtoumax(0, 0, 0);
+	x = wcstoimax(0, 0, 0);
+	y = wcstoumax(0, 0, 0);
+}
 #endif
 
 int main() {
 	check_assert();
 	check_ctype();
 	check_errno();
+	// ignore locale
+
 #ifdef __CXX11__
 	check_fenv();
+	check_inttypes();
 #endif
 }

@@ -9,4 +9,4 @@ function remove_cxx {
 	done
 }
 
-g++ -S gen.cpp -o - | perl -ne 's/^\tcall\t(.*?)\@PLT$/$1/ && print' | remove_cxx | sort | uniq > symbol
+g++ -S gen.cpp -o - | perl -ne 's/^\tcall\t(.*?)\@PLT$/$1/ && print' | remove_cxx | sort -u -V -o symbol

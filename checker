@@ -25,7 +25,7 @@ if cat $ASM | grep -E '^#APP$' > /dev/null; then
 	exit 2;
 fi
 
-if ! cat $ASM | perl -ne 's/^\tcall\t(.*?)\@PLT$/$1/ && print' | remove_cxx | sort | uniq | ./checker-symbol > symbol-unknown; then
+if ! cat $ASM | perl -ne 's/^\tcall\t(.*?)\@PLT$/$1/ && print' | remove_cxx | sort -u | ./checker-symbol > symbol-unknown; then
 	echo >&2 "This source uses invalid external function.";
 	exit 3;
 fi
