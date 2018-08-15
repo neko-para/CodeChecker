@@ -30,3 +30,4 @@ function gen {
 
 gen symbol-c-normal
 gen symbol-c-file
+gen symbol-cxx-normal

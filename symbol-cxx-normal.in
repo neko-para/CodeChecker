@@ -1,0 +1,9 @@
+operator delete(void*)
+operator new(unsigned long)
+std::__throw_bad_alloc()
+std::__throw_length_error(char const*)
+_Unwind_Resume
+__cxa_atexit
+__cxa_begin_catch
+__cxa_end_catch
+__cxa_rethrow
