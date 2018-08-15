@@ -9,4 +9,24 @@ function remove_cxx {
 	done
 }
 
-g++ -S gen.cpp -o - | perl -ne 's/^\tcall\t(.*?)\@PLT$/$1/ && print' | remove_cxx | sort -u -V -o symbol
+function gen {
+	local src;
+	local tmp=`tempfile`;
+	if [ -e "$1.in" ]; then
+		cp $1.in $1;
+	else
+		echo -n > $1;
+	fi
+	if [ -e "$1.cpp" ]; then
+		g++ -S "$1.cpp" -std=c++98 -o - | perl -ne 's/^.*?([a-zA-Z_][a-zA-Z_0-9]*)\@.*/$1/ && print' | c++filt >> "$1";
+	fi
+	if [ -e "$1.c" ]; then
+		gcc -S "$1.c" -std=c89 -o - | perl -ne 's/^.*?([a-zA-Z_][a-zA-Z_0-9]*)\@.*/$1/ && print' >> "$1";
+	fi
+	mv "$1" $tmp;
+	cat $tmp | sort -u -V -o "$1";
+	rm $tmp;
+}
+
+gen symbol-c-normal
+gen symbol-c-file

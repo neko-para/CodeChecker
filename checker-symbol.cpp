@@ -5,11 +5,18 @@
 using namespace std;
 
 int main() {
-	ifstream symbols("symbol");
 	set<string> symbol;
+	ifstream files("symbol.list");
+	string filename;
 	string str;
-	while (getline(symbols, str)) {
-		symbol.insert(str);
+	while (getline(files, filename)) {
+		if (filename[0] == '#') {
+			continue;
+		}
+		ifstream symbols(filename);
+		while (getline(symbols, str)) {
+			symbol.insert(str);
+		}
 	}
 	int code = 0;
 	while (getline(cin, str)) {

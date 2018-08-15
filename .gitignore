@@ -1,5 +1,10 @@
-checker-symbol
-symbol-unknown
-test
-symbol
-.vscode
+*
+!.gitignore
+!*.cpp
+!*.c
+!*.in
+!README.md
+!checker
+!gen
+!symbol.list
+test*
