@@ -18,16 +18,17 @@ function gen {
 		echo -n > $1;
 	fi
 	if [ -e "$1.cpp" ]; then
-		g++ -S "$1.cpp" -std=c++98 -o - | perl -ne 's/^.*?([a-zA-Z_][a-zA-Z_0-9]*)\@.*/$1/ && print' | c++filt >> "$1";
+		g++ -S "$1.cpp" $2 -std=c++98 -o - | perl -ne 's/^.*?([a-zA-Z_][a-zA-Z_0-9]*)\@.*/$1/ && print' | c++filt >> "$1";
 	fi
 	if [ -e "$1.c" ]; then
-		gcc -S "$1.c" -std=c89 -o - | perl -ne 's/^.*?([a-zA-Z_][a-zA-Z_0-9]*)\@.*/$1/ && print' >> "$1";
+		gcc -S "$1.c" $2 -std=c89 -o - | perl -ne 's/^.*?([a-zA-Z_][a-zA-Z_0-9]*)\@.*/$1/ && print' >> "$1";
 	fi
 	mv "$1" $tmp;
 	cat $tmp | sort -u -V -o "$1";
 	rm $tmp;
 }
 
-gen symbol-c-normal
+gen symbol-c-normal -fstack-protector-all # force use __stack_chk_fail
 gen symbol-c-file
 gen symbol-cxx-normal
+gen symbol-cxx-ios
